@@ -17,9 +17,12 @@ import AdminUsers from './pages/AdminUsers';
 import AdminStats from './pages/AdminStats';
 import AppLayout from './layouts/AppLayout';
 
+import Onboarding from './pages/Onboarding';
+
 // Route guards
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, loading } = useAuth();
+  const location = window.location.pathname;
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 font-sans font-bold text-slate-400">
@@ -29,8 +32,11 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
 
   if (!user) return <Navigate to="/login" replace />;
 
-  // Pending users get their own friendly dashboard
-  if (user.status === 'pending') return <Navigate to="/pending" replace />;
+  // Pending users can access /onboarding, otherwise they go to /pending
+  if (user.status === 'pending') {
+    if (location === '/onboarding') return <AppLayout>{children}</AppLayout>;
+    return <Navigate to="/pending" replace />;
+  }
 
   // Only admins can access admin routes
   if (adminOnly && user.role !== 'admin') return <Navigate to="/app" replace />;
@@ -43,7 +49,11 @@ const GuestRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) return null;
   if (user) {
-    if (user.status === 'pending') return <Navigate to="/pending" replace />;
+    if (user.status === 'pending') {
+      // If profile is missing (e.g. name is empty), go to onboarding
+      if (!user.profile || !user.profile.name) return <Navigate to="/onboarding" replace />;
+      return <Navigate to="/pending" replace />;
+    }
     if (user.role === 'admin') return <Navigate to="/admin/users" replace />;
     return <Navigate to="/app" replace />;
   }
@@ -64,8 +74,12 @@ function App() {
         {/* Admin-only registration page (secret key protected) */}
         <Route path="/admin/register" element={<AdminRegister />} />
 
+        {/* User Onboarding (logged in but profile not set) */}
+        <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+
         {/* Pending user dashboard (logged in but not yet approved) */}
         <Route path="/pending" element={<PendingDashboard />} />
+...
 
         {/* Protected user routes */}
         <Route path="/app" element={<ProtectedRoute><Discovery /></ProtectedRoute>} />

@@ -18,9 +18,9 @@ const Register = () => {
     setLoading(true);
     try {
       await api.post('/auth/register', { email, password });
-      // Auto-login so user goes straight to Pending Dashboard
+      // Auto-login so user goes straight to Onboarding
       await login(email, password);
-      navigate('/pending');
+      navigate('/onboarding');
     } catch (err) {
       Swal.fire({
         icon: 'error',
