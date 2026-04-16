@@ -66,12 +66,12 @@ const LandingPage = () => {
             <div className="aspect-square rounded-[3rem] bg-gradient-to-br from-primary-400 to-amber-600 p-1 shadow-2xl overflow-hidden shadow-primary-500/20">
               <div className="w-full h-full bg-white rounded-[2.9rem] flex items-center justify-center relative overflow-hidden">
                 {/* Visual Placeholder for App Mockup */}
-                <div className="absolute inset-0 bg-slate-50 flex items-center justify-center p-8">
-                   <div className="w-full max-w-xs card p-6 space-y-4">
-                      <div className="w-full h-48 bg-slate-200 rounded-xl animate-pulse" />
-                      <div className="h-4 w-3/4 bg-slate-200 rounded animate-pulse" />
-                      <div className="h-4 w-1/2 bg-slate-200 rounded animate-pulse" />
-                   </div>
+                <div className="absolute inset-0 bg-slate-50 flex items-center justify-center">
+                   <img 
+                     src="/matchmaking.jpg" 
+                     alt="ChurchMatch App Preview" 
+                     className="w-full h-full object-cover"
+                   />
                 </div>
                 {/* Floating Elements */}
                 <motion.div 
