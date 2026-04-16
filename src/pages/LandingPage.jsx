@@ -1,9 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Users, Shield, ArrowRight, MessageCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const LandingPage = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* NAV */}
@@ -18,15 +27,33 @@ const LandingPage = () => {
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
             <a href="#features" className="hover:text-primary-500 transition-colors">How it Works</a>
             <a href="#about" className="hover:text-primary-500 transition-colors">Community</a>
-            <Link to="/login" className="text-slate-900 hover:text-primary-500 transition-colors">Login</Link>
-            <Link to="/register" className="bg-primary-500 text-white px-5 py-2.5 rounded-xl hover:bg-primary-600 transition-all shadow-md shadow-primary-500/20">
-              Join Free
-            </Link>
+            
+            {user ? (
+               <>
+                 <Link to="/app" className="text-slate-900 font-bold hover:text-primary-500 transition-colors">Dashboard</Link>
+                 <button onClick={handleLogout} className="bg-rose-50 text-rose-600 px-5 py-2.5 rounded-xl font-bold hover:bg-rose-100 transition-all border border-rose-100">
+                   Sign Out
+                 </button>
+               </>
+            ) : (
+               <>
+                 <Link to="/login" className="text-slate-900 hover:text-primary-500 transition-colors">Login</Link>
+                 <Link to="/register" className="bg-primary-500 text-white px-5 py-2.5 rounded-xl hover:bg-primary-600 transition-all shadow-md shadow-primary-500/20">
+                   Join Free
+                 </Link>
+               </>
+            )}
           </div>
           {/* Mobile Login Button */}
-          <Link to="/login" className="md:hidden bg-primary-500 text-white px-4 py-2 rounded-lg text-sm font-bold">
-            Get Started
-          </Link>
+          {user ? (
+             <Link to="/app" className="md:hidden bg-primary-500 text-white px-4 py-2 rounded-lg text-sm font-bold">
+               Dashboard
+             </Link>
+          ) : (
+             <Link to="/login" className="md:hidden bg-primary-500 text-white px-4 py-2 rounded-lg text-sm font-bold">
+               Get Started
+             </Link>
+          )}
         </div>
       </nav>
 
@@ -48,12 +75,25 @@ const LandingPage = () => {
               The premier social matching platform designed exclusively for church communities. Connect with people who share your values, faith, and vision for the future.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/register" className="btn-primary flex items-center justify-center gap-2 text-lg px-8 py-4">
-                Create Your Profile <ArrowRight size={20} />
-              </Link>
-              <Link to="/login" className="btn-secondary flex items-center justify-center text-lg px-8 py-4">
-                Sign In
-              </Link>
+              {user ? (
+                <>
+                  <Link to="/app" className="btn-primary flex items-center justify-center gap-2 text-lg px-8 py-4">
+                    Go to Dashboard <ArrowRight size={20} />
+                  </Link>
+                  <button onClick={handleLogout} className="btn-secondary flex items-center justify-center text-lg px-8 py-4 text-rose-500 hover:bg-rose-50 border-rose-100">
+                    Logout Account
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/register" className="btn-primary flex items-center justify-center gap-2 text-lg px-8 py-4">
+                    Create Your Profile <ArrowRight size={20} />
+                  </Link>
+                  <Link to="/login" className="btn-secondary flex items-center justify-center text-lg px-8 py-4">
+                    Sign In
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
 

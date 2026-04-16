@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { User, MapPin, Church, Heart, Save, Loader2 } from 'lucide-react';
+import { User, MapPin, Church, Heart, Save, Loader2, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const VALUE_OPTIONS = [
@@ -12,7 +13,8 @@ const VALUE_OPTIONS = [
 ];
 
 const ProfileEdit = () => {
-  const { user, setUser } = useAuth();
+  const { user, setUser, logout } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     age: 18,
@@ -86,6 +88,11 @@ const ProfileEdit = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   if (loading) {
@@ -240,11 +247,20 @@ const ProfileEdit = () => {
           </div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center gap-4">
+          <button 
+            type="button"
+            onClick={handleLogout}
+            className="btn-secondary flex items-center justify-center gap-2 px-6 py-4"
+          >
+            <LogOut size={20} />
+            Sign Out
+          </button>
+          
           <button 
             type="submit" 
             disabled={saving}
-            className="btn-primary flex items-center gap-2 px-10 py-4 shadow-xl"
+            className="btn-primary flex items-center gap-2 px-10 py-4 shadow-xl flex-1 md:flex-none justify-center"
           >
             {saving ? <Loader2 className="animate-spin" /> : <Save size={20} />}
             Save Changes

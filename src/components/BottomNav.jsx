@@ -1,10 +1,20 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Heart, MessageCircle, User } from 'lucide-react';
+import { Home, Heart, MessageCircle, User, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const BottomNav = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
-    <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm glass rounded-2xl h-16 px-6 flex items-center justify-around shadow-2xl shadow-primary-500/10 border border-white/40">
+    <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[95%] max-w-md glass rounded-2xl h-16 px-4 flex items-center justify-around shadow-2xl shadow-primary-500/10 border border-white/40 z-50">
       <NavLink 
         to="/app" 
         className={({ isActive }) => 
@@ -37,6 +47,12 @@ const BottomNav = () => {
       >
         <User size={22} fill={window.location.pathname === '/profile' ? 'currentColor' : 'none'} />
       </NavLink>
+      <button 
+        onClick={handleLogout}
+        className="flex flex-col items-center justify-center text-rose-400 hover:text-rose-500 active:scale-95 transition-all"
+      >
+        <LogOut size={22} />
+      </button>
     </div>
   );
 };
